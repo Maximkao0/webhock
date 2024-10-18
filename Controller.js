@@ -47,9 +47,7 @@ class Controller {
             const tags = response.data?.customers?.[0]?.tags;
             if (customerId) {
                 console.log(`BlueSales ID: ${customerId}`);
-                //this.updateCFBlueSalesTag(customerId, tags)
-                //this.updateCFBlueSalesSource(customerId)
-                //await this.updateBlueSalesSource(customerId);
+                this.updateCFBlueSalesTag(customerId, tags)
             } else {
                 console.error('Customer ID not found in the response.');
             }
@@ -58,54 +56,14 @@ class Controller {
         }
     }
 
-    async updateBlueSalesSource(id) {
-        const update = {
-            "id": id,
-            "source": {
-                "id": "141082",
-                "name": "test_source"
-            }
-        };
-
-        try {
-            const response = await axios.post(
-                `https://bluesales.ru/app/Customers/WebServer.aspx?login=${BLUESALES_API.login}&password=${BLUESALES_API.pass}&command=customers.update`, 
-                update
-            );
-
-            console.log(`Status: ${response.status}`);
-            console.log('Body:', response.data);
-        } catch (error) {
-            console.error('Error updating BlueSales source:', error);
-        }
-    }
-
-    async updateCFBlueSalesSource(id) {
-        const update = {
-            "id": id,
-            "customFields": [
-                {
-                    "fieldId": "15934",
-                    "value": "test"
-                }
-            ]
-        };
-
-        try {
-            const response = await axios.post(
-                `https://bluesales.ru/app/Customers/WebServer.aspx?login=${BLUESALES_API.login}&password=${BLUESALES_API.pass}&command=customers.update`, 
-                update
-            );
-
-            console.log(`Status: ${response.status}`);
-            console.log('Body:', response.data);
-        } catch (error) {
-            console.error('Error updating BlueSales source:', error);
-        }
-    }
 
     async updateCFBlueSalesTag(id, tags) {
-        tags.push({id: 321538})
+        if (tags){
+            tags.push({id: 321538})
+        } else{
+            tags = [{id: 321538}]
+        }
+        
         const update = {
             "id": id,
             "tags": tags
